@@ -1,0 +1,54 @@
+cert-manager:
+  install: false
+
+configMap:
+  data:
+    ENVIRONMENT: local
+    MEMCACHED_HOST: memcached
+    MEMCACHED_PORT: "11211"
+    MYSQL_HOST: wikimo-db-headless
+    MYSQL_DATABASE: wikimo
+    MYSQL_PASSWORD: default-non-secure-password
+    MYSQL_PORT: "3306"
+    MYSQL_USER: wikimo
+    SITE_URL: http://localhost
+
+deployment:
+  replicaCount: 1
+  healthchecks:
+    path: /
+
+hpa:
+  enabled: false
+
+image:
+  pullPolicy: Always
+  repository: mediawiki
+  tag: 1.31.5
+
+ingress:
+  enabled: false
+  le:
+    issuer_create: false
+
+memcached:
+  fullnameOverride: memcached
+  install: true
+
+mysql:
+  fullnameOverride: wikimo-db
+  install: true
+  auth:
+    username: wikimo
+    database: wikimo
+    password: default-non-secure-password
+    rootPassword: default-non-secure-root-password
+  image:
+    tag: 5.7.33
+  primary:
+    fullname: wikimo
+    persistence:
+      enabled: false
+
+volume:
+  enabled: false
